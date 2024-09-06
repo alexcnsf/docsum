@@ -1,20 +1,32 @@
 import os
+from dotenv import load_dotenv
 from groq import Groq
+import argparse
+import fulltext
+
+#load_dotenv()
+#api_key = os.getenv('GROQ_API_KEY')
+
+parser = argparse.ArgumentParser()
+parser.add_argument('filename')
+args = parser.parse_args()
+
+text = fulltext.get(args.filename)
 
 client = Groq(
     # This is the default and can be omitted
-    api_key="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",
+    api_key=os.environ.get("GROQ_API_KEY"),
 )
 
-filename = 'docs/declaration'
-with open(filename) as f:
-	text = f.read()
+# filename = 'docs/declaration'
+#with open(filename) as f:
+#	text = f.read()
 
 chat_completion = client.chat.completions.create(
     messages=[
 	{
 	'role':'system',
-	'content':'Summarize the input text below and give me a summary of what it says in spanish at a very easy level of vocabulary',
+	'content':'Summarize the input text below and give me a summary of what it says on a 5th grade level',
 }
 ,
         {
