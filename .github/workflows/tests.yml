@@ -40,11 +40,10 @@ jobs:
 
       # Step 5: Run the tests with delays
       - name: Test document summaries with delay
-        run: |
-          for file in docs/*; do
-            echo "Processing $file"
-            python3 docsum.py ${file}
-            echo "Waiting for 30 seconds..."
-            sleep 30
-          done
-
+	run: |
+          python3 docsum.py docs/declaration
+          python3 docsum.py docs/2023.findings-emnlp.945.pdf
+          python3 docsum.py docs/hamlet.txt
+          python3 docsum.py docs/estados-unidos-admite-haber-perdido-la-pista-de-32000-menores-migrantes-no-acompanados.html
+          python3 docsum.py docs/news-mx.txt
+          python3 docsum.py docs/constitution-mx.txt
