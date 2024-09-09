@@ -107,7 +107,7 @@ for chunk in chunks:
     print(f"Chunk summary: {summary}")
     
     # Introduce a delay of 30 seconds before processing the next chunk
-    time.sleep(30)
+    time.sleep(15)
 
 
 # Combine chunk summaries into a single paragraph summary
