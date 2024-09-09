@@ -1,6 +1,7 @@
 import argparse
 import chardet
 import os
+import time
 import fulltext
 from groq import Groq  # Assuming you have a Groq client library
 import PyPDF2  # For PDF extraction
