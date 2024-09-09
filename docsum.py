@@ -2,6 +2,7 @@ import argparse
 import chardet
 import os
 from groq import Groq  # Assuming you have a Groq client library
+import fulltext
 
 # Function to detect encoding using chardet
 def detect_encoding(file_path):
@@ -16,13 +17,29 @@ def read_file_with_encoding(file_path):
     with open(file_path, 'r', encoding=encoding) as f:
         return f.read()
 
+# Function to extract text from the file using fulltext and fallback to chardet if necessary
+def extract_text(file_path):
+    try:
+        # Try using fulltext to extract text from the file
+        return fulltext.get(file_path)
+    except (UnicodeDecodeError, Exception) as e:
+        print(f"fulltext failed: {e}")
+        print("Attempting to detect encoding with chardet...")
+
+        # Fallback to using chardet to detect encoding and read the file
+        try:
+            return read_file_with_encoding(file_path)
+        except Exception as e:
+            print(f"Failed to read the file even after detecting encoding: {e}")
+            exit(1)
+
 # Argument parser
 parser = argparse.ArgumentParser()
 parser.add_argument('filename')
 args = parser.parse_args()
 
-# Read the document text with detected encoding
-text = read_file_with_encoding(args.filename)
+# Read the document text using fulltext or chardet as a fallback
+text = extract_text(args.filename)
 
 # Initialize the Groq client
 client = Groq(
@@ -61,7 +78,7 @@ for chunk in chunks:
     summary = summarize_chunk(chunk)
     chunk_summaries.append(summary)
 
-# Combine chunk summaries into a single paragraph summary (as you had it)
+# Combine chunk summaries into a single paragraph summary
 final_summary_prompt = "Summarize the following summaries into a single paragraph:\n" + " ".join(chunk_summaries)
 final_summary = summarize_chunk(final_summary_prompt)
 
