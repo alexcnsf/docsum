@@ -104,6 +104,11 @@ chunk_summaries = []
 for chunk in chunks:
     summary = summarize_chunk(chunk)
     chunk_summaries.append(summary)
+    print(f"Chunk summary: {summary}")
+    
+    # Introduce a delay of 30 seconds before processing the next chunk
+    time.sleep(30)
+
 
 # Combine chunk summaries into a single paragraph summary
 final_summary_prompt = "Summarize the following summaries into a single paragraph:\n" + " ".join(chunk_summaries)

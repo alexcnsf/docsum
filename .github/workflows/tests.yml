@@ -41,16 +41,22 @@ jobs:
 
       # Step 5: Run the tests with delays
       - name: Test document summaries with delay
-        run: |
-          python3 docsum.py docs/hamlet.txt
-          sleep 30  # Delay for 5 seconds
-          python3 docsum.py docs/declaration
-          sleep 30  # Delay for 5 seconds
-          python3 docsum.py docs/2023.findings-emnlp.945.pdf
-          sleep 30  # Delay for 5 seconds
-          python3 docsum.py docs/estados-unidos-admite-haber-perdido-la-pista-de-32000-menores-migrantes-no-acompanados.html
-          sleep 30  # Delay for 5 seconds
-          python3 docsum.py docs/news-mx.txt
-          sleep 30  # Delay for 5 seconds
-          python3 docsum.py docs/constitution-mx.txt
+	run: |
+          for file in docs/*; do
+            echo "Processing $file"
+            python3 docsum.py ${file}
+            echo "Waiting for 30 seconds..."
+            sleep 30
+          done
+	  #python3 docsum.py docs/hamlet.txt
+          #sleep 30  # Delay for 5 seconds
+          #python3 docsum.py docs/declaration
+          #sleep 30  # Delay for 5 seconds
+          #python3 docsum.py docs/2023.findings-emnlp.945.pdf
+          #sleep 30  # Delay for 5 seconds
+          #python3 docsum.py docs/estados-unidos-admite-haber-perdido-la-pista-de-32000-menores-migrantes-no-acompanados.html
+          #sleep 30  # Delay for 5 seconds
+          #python3 docsum.py docs/news-mx.txt
+          #sleep 30  # Delay for 5 seconds
+          #python3 docsum.py docs/constitution-mx.txt
 
