@@ -15,34 +15,42 @@ jobs:
     timeout-minutes: 30
     env:
       GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+    
     steps:
+      # Step 1: Checkout the repository
       - uses: actions/checkout@v2
-      
-      # Set up Python
+
+      # Step 2: Set up Python version based on matrix
       - name: Set up Python ${{matrix.python}}
         uses: actions/setup-python@v2
         with:
           python-version: ${{matrix.python}}
-      
-      # Install system dependencies (poppler-utils for PDF handling)
+
+      # Step 3: Install system dependencies (for PDF handling)
       - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y poppler-utils  # Required for PDF text extraction with fulltext
-      
-      # Install Python dependencies
+
+      # Step 4: Install Python dependencies, including PyPDF2, fulltext, and chardet
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install PyPDF2 fulltext chardet  # Explicitly install needed Python packages
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      
-      # Run the tests
-      - name: Test document summaries
+
+      # Step 5: Run the tests with delays
+      - name: Test document summaries with delay
         run: |
+          python3 docsum.py docs/hamlet.txt
+          sleep 30  # Delay for 5 seconds
           python3 docsum.py docs/declaration
+          sleep 30  # Delay for 5 seconds
           python3 docsum.py docs/2023.findings-emnlp.945.pdf
+          sleep 30  # Delay for 5 seconds
           python3 docsum.py docs/estados-unidos-admite-haber-perdido-la-pista-de-32000-menores-migrantes-no-acompanados.html
+          sleep 30  # Delay for 5 seconds
           python3 docsum.py docs/news-mx.txt
+          sleep 30  # Delay for 5 seconds
           python3 docsum.py docs/constitution-mx.txt
 
