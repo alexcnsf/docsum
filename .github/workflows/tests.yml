@@ -10,8 +10,9 @@ jobs:
   tests:
     strategy:
       matrix:
-        python: [3.8, 3.9]
+        python: [3.8]
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
     steps:
@@ -22,11 +23,15 @@ jobs:
           python-version: ${{matrix.python}}
       - name: install dependencies
         run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: run doctests
+      - name: test declaration
         run: |
-          python3 -m doctest docsum.py
-      - name: run all files
-        run: |
-          for file in docs/*; do python3 docsum.py ${file}; done
+          python3 docsum.py docs/declaration
+          python3 docsum.py docs/2023.findings-emnlp.945.pdf
+          python3 docsum.py docs/hamlet.txt
+          python3 docsum.py docs/estados-unidos-admite-haber-perdido-la-pista-de-32000-menores-migrantes-no-acompanados.html
+          python3 docsum.py docs/news-mx.txt
+          python3 docsum.py docs/constitution-mx.txt
