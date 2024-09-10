@@ -1,7 +1,16 @@
 # docsum ![](https://github.com/alexcnsf/docsum/workflows/tests/badge.svg)
 
 
-I developed a docuemnt summarizier using GROQ's cutting-edge, low-latency LLM API to summarize documents of any size and text type at great speeds.
+I developed a docuemnt summarizier, `docsum.py`,  using GROQ's cutting-edge, low-latency LLM API to summarize documents of any size and text type at great speeds.
+
+## Requirements
+
+All requirements and dependencies are listed in the up-to-date requirements.txt file.
+Also remeber to get your own GROQ API key and set it as an enviromental variable
+
+## Usage
+
+Upload a summarize any document you want!
 
 For example:
 docsum anasoni$ python3 docsum.py docs/constitution-mx.txt
