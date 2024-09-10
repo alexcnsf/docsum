@@ -1,8 +1,8 @@
 import argparse
 import chardet
 import os
-import fulltext
 import time
+import fulltext
 from groq import Groq  # Assuming you have a Groq client library
 import PyPDF2  # For PDF extraction
 
@@ -75,7 +75,7 @@ client = Groq(
 )
 
 # Define CHUNK_SIZE for splitting the text
-CHUNK_SIZE = 3000  # Adjust this value based on your needs
+CHUNK_SIZE = 3000  # You can adjust this value based on your needs
 
 # Define the summary prompt
 SUMMARY_PROMPT = "Please summarize this text into one sentence."
@@ -97,33 +97,22 @@ def summarize_chunk(chunk):
     )
     return chat_completion.choices[0].message.content
 
-# Recursive function to summarize until we get a single paragraph under CHUNK_SIZE
-def recursive_summarize(text, chunk_size):
-    # Break the text into chunks
-    chunks = list(chunk_text(text, chunk_size))
+# Break the text into chunks
+chunks = list(chunk_text(text, CHUNK_SIZE))
 
-    # Summarize each chunk into a sentence
-    chunk_summaries = []
-    for chunk in chunks:
-        summary = summarize_chunk(chunk)
-        chunk_summaries.append(summary)
+# Summarize each chunk
+chunk_summaries = []
+for chunk in chunks:
+    summary = summarize_chunk(chunk)
+    chunk_summaries.append(summary)
+    
+    # Introduce a delay of 30 seconds before processing the next chunk
+    time.sleep(15)
 
-        # Introduce a delay of 15 seconds before processing the next chunk
-        time.sleep(15)
 
-    # Combine all the sentence summaries
-    combined_summary = " ".join(chunk_summaries)
-
-    # Check if the combined summary is still greater than chunk_size
-    if len(combined_summary.split()) > chunk_size:
-        print(f"Summary is still too long: {len(combined_summary.split())} words. Summarizing again...\n")
-        # Recursively summarize until the combined summary is less than chunk_size
-        return recursive_summarize(combined_summary, chunk_size)
-    else:
-        return combined_summary
-
-# Perform the recursive summarization
-final_summary = recursive_summarize(text, CHUNK_SIZE)
+# Combine chunk summaries into a single paragraph summary
+final_summary_prompt = "Summarize the following summaries into a single paragraph:\n" + " ".join(chunk_summaries)
+final_summary = summarize_chunk(final_summary_prompt)
 
 # Print the final single-paragraph summary
 print("\nFinal Summary:")
