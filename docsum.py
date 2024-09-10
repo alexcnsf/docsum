@@ -77,8 +77,8 @@ client = Groq(
 # Define CHUNK_SIZE for splitting the text
 CHUNK_SIZE = 3000  # Adjust this value based on your needs
 
-# Define the summary prompt
-SUMMARY_PROMPT = "Please summarize this text into one sentence."
+# Define the summary prompt to encourage paragraph summarization
+SUMMARY_PROMPT = "Please summarize this text into one cohesive paragraph."
 
 # Function to chunk text into smaller parts
 def chunk_text(text, chunk_size):
@@ -120,7 +120,10 @@ def recursive_summarize(text, chunk_size):
         # Recursively summarize until the combined summary is less than chunk_size
         return recursive_summarize(combined_summary, chunk_size)
     else:
-        return combined_summary
+        # Generate a final paragraph summary from the combined summaries
+        final_summary_prompt = "Summarize the following into a single cohesive paragraph:\n" + combined_summary
+        final_summary = summarize_chunk(final_summary_prompt)
+        return final_summary
 
 # Perform the recursive summarization
 final_summary = recursive_summarize(text, CHUNK_SIZE)
